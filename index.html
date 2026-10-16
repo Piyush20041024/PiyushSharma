@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Piyush Sharma | Web Developer & Software Engineer</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Google Fonts: Outfit, Plus Jakarta Sans, Fira Code -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Canvas Confetti for CLI Easter Egg -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        heading: ['Outfit', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        obsidian: '#07090e',
+                        surface: '#0f1420',
+                        brand: {
+                            violet: '#8b5cf6',
+                            indigo: '#6366f1',
+                            cyan: '#06b6d4',
+                            emerald: '#10b981'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        html {
+            background-color: #07090e;
+            color: #f3f4f6;
+        }
+        
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #07090e;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 5px;
+            border: 2px solid #07090e;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #8b5cf6;
+        }
+
+        /* Ambient Mesh Background */
+        .ambient-mesh {
+            background-image: 
+                radial-gradient(at 10% 10%, rgba(139, 92, 246, 0.15) 0px, transparent 40%),
+                radial-gradient(at 90% 20%, rgba(6, 182, 212, 0.12) 0px, transparent 40%),
+                radial-gradient(at 50% 80%, rgba(99, 102, 241, 0.1) 0px, transparent 50%),
+                radial-gradient(at 80% 90%, rgba(16, 185, 129, 0.08) 0px, transparent 40%);
+            background-attachment: fixed;
+        }
+
+        .glass-nav {
+            background: rgba(15, 20, 32, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glass-card {
+            background: rgba(15, 20, 32, 0.55);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(139, 92, 246, 0.4);
+            box-shadow: 0 20px 40px -15px rgba(139, 92, 246, 0.25);
+        }
+
+        .gradient-text-primary {
+            background: linear-gradient(135deg, #a78bfa 0%, #38bdf8 50%, #818cf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-glow-violet {
+            box-shadow: 0 0 20px -3px rgba(139, 92, 246, 0.5);
+            transition: all 0.3s ease;
+        }
+        .btn-glow-violet:hover {
+            box-shadow: 0 0 30px 2px rgba(139, 92, 246, 0.75);
+            transform: translateY(-2px);
+        }
+
+        .bg-grid-overlay {
+            background-size: 50px 50px;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+        }
+
+        /* Typewriter Cursor Effect */
+        .typewriter-cursor::after {
+            content: '|';
+            animation: blink 1s step-start infinite;
+            color: #06b6d4;
+        }
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        /* Keyframe Floating Animation */
+        @keyframes float-slow {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(0.5deg); }
+        }
+        .animate-float {
+            animation: float-slow 7s ease-in-out infinite;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        #toast {
+            transform: translateY(100px);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        #toast.show {
+            transform: translateY(0);
+        }
+
+        /* Matcher highlight styles */
+        .card-matched {
+            border-color: #06b6d4 !important;
+            box-shadow: 0 0 25px rgba(6, 182, 212, 0.4) !important;
+            opacity: 1 !important;
+        }
+        .card-dimmed {
+            opacity: 0.25 !important;
+        }
+    </style>
+</head>
+<body class="bg-obsidian ambient-mesh bg-grid-overlay antialiased text-slate-200 selection:bg-brand-violet selection:text-white min-h-screen relative overflow-x-hidden">
+
+    <!-- Scroll Progress Bar -->
+    <div id="scroll-progress" class="fixed top-0 left-0 h-1 bg-gradient-to-r from-brand-violet via-brand-cyan to-brand-emerald z-50 transition-all duration-150 w-0"></div>
+
+    <!-- Navigation Header -->
+    <header class="fixed top-0 w-full z-40 glass-nav">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            
+            <!-- Brand Vector Logo -->
+            <a href="#" class="flex items-center gap-3.5 group">
+                <div class="relative flex items-center justify-center w-11 h-11 rounded-xl bg-gradient-to-br from-brand-violet/20 to-brand-indigo/30 border border-brand-violet/40 group-hover:border-brand-violet transition-all duration-300 shadow-lg shadow-brand-violet/20">
+                    <svg class="w-6 h-6 text-brand-violet group-hover:scale-110 transition-transform duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="16 18 22 12 16 6"></polyline>
+                        <polyline points="8 6 2 12 8 18"></polyline>
+                        <line x1="12" y1="4" x2="12" y2="20" class="stroke-brand-cyan"></line>
+                    </svg>
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-heading text-xl font-extrabold tracking-tight text-white group-hover:text-brand-violet transition-colors">
+                        Piyush<span class="text-brand-violet group-hover:text-brand-cyan transition-colors">.dev</span>
+                    </span>
+                    <span class="text-[10px] font-semibold tracking-widest text-slate-400 uppercase">Software Engineer</span>
+                </div>
+            </a>
+
+            <!-- Desktop Navigation Links -->
+            <nav class="hidden md:flex items-center gap-8 font-medium text-slate-300 text-sm">
+                <a href="#about" class="hover:text-brand-violet transition-colors">About</a>
+                <a href="#skills" class="hover:text-brand-violet transition-colors">Skills</a>
+                <a href="#projects" class="hover:text-brand-violet transition-colors">Projects</a>
+                <a href="#education" class="hover:text-brand-violet transition-colors">Education</a>
+                <a href="#contact" class="hover:text-brand-violet transition-colors">Contact</a>
+            </nav>
+
+            <!-- CTA Actions & CLI Trigger -->
+            <div class="hidden md:flex items-center gap-3">
+                <button id="open-cli-nav" class="px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-brand-violet text-xs font-mono text-slate-300 hover:text-white transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-terminal text-brand-cyan"></i>
+                    <span>Ctrl + K</span>
+                </button>
+                <a href="mailto:piyush24102004@gmail.com" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-violet to-brand-indigo text-white font-semibold text-sm btn-glow-violet active:scale-95 flex items-center gap-2">
+                    <i class="fa-solid fa-paper-plane text-xs"></i> Hire Me
+                </a>
+            </div>
+
+            <!-- Mobile Menu Toggle Button -->
+            <button id="menu-btn" class="md:hidden text-slate-300 hover:text-white focus:outline-none p-2">
+                <i class="fa-solid fa-bars-staggered text-2xl"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Navigation Drawer -->
+        <div id="mobile-menu" class="hidden md:hidden glass-nav border-t border-slate-800/80 px-6 py-6 transition-all duration-300">
+            <div class="flex flex-col gap-4 font-medium text-slate-300">
+                <a href="#about" class="mobile-link hover:text-brand-violet py-2 border-b border-slate-800/50">About</a>
+                <a href="#skills" class="mobile-link hover:text-brand-violet py-2 border-b border-slate-800/50">Skills</a>
+                <a href="#projects" class="mobile-link hover:text-brand-violet py-2 border-b border-slate-800/50">Projects</a>
+                <a href="#education" class="mobile-link hover:text-brand-violet py-2 border-b border-slate-800/50">Education</a>
+                <a href="#contact" class="mobile-link hover:text-brand-violet py-2 border-b border-slate-800/50">Contact</a>
+                <button id="open-cli-mobile" class="py-2.5 text-left font-mono text-xs text-brand-cyan flex items-center gap-2">
+                    <i class="fa-solid fa-terminal"></i> Open Developer Terminal
+                </button>
+                <a href="mailto:piyush24102004@gmail.com" class="mt-2 text-center py-3 rounded-xl bg-gradient-to-r from-brand-violet to-brand-indigo text-white font-bold text-sm shadow-lg shadow-brand-violet/30">
+                    Get In Touch
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="relative z-10">
+        <!-- Hero Section -->
+        <section id="about" class="min-h-screen pt-36 pb-20 px-6 max-w-7xl mx-auto flex flex-col justify-center relative">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <div class="lg:col-span-7 flex flex-col items-start reveal">
+                    <!-- Status Badge -->
+                    <div class="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-brand-violet/10 border border-brand-violet/30 text-brand-violet text-xs font-bold mb-8 backdrop-blur-md">
+                        <span class="relative flex h-2.5 w-2.5">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-violet opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-brand-violet"></span>
+                        </span>
+                        Open for Software & Web Engineering Roles
+                    </div>
+
+                    <h1 class="font-heading text-4xl sm:text-6xl xl:text-7xl font-extrabold text-white tracking-tight leading-[1.08]">
+                        Architecting Web Apps & <span id="typewriter-text" class="gradient-text-primary typewriter-cursor"></span>
+                    </h1>
+
+                    <p class="mt-6 text-lg sm:text-xl text-slate-400 max-w-2xl leading-relaxed font-normal">
+                        Hi, I'm <strong class="text-white font-semibold">Piyush Sharma</strong>. A Computer Science & Engineering graduate specializing in building performant JavaScript & React web platforms, REST APIs, and integrated IoT hardware dashboards.
+                    </p>
+
+                    <!-- CTAs & Social Handles -->
+                    <div class="mt-10 flex flex-wrap items-center gap-4">
+                        <a href="#projects" class="px-7 py-3.5 rounded-xl bg-gradient-to-r from-brand-violet to-brand-indigo text-white font-bold text-sm btn-glow-violet flex items-center gap-2">
+                            Explore Projects <i class="fa-solid fa-arrow-down-long text-xs"></i>
+                        </a>
+                        <a href="https://github.com/Piyush20041024" target="_blank" class="px-6 py-3.5 rounded-xl glass-card text-slate-300 hover:text-white font-semibold text-sm flex items-center gap-2">
+                            <i class="fa-brands fa-github text-lg text-slate-400"></i> GitHub
+                        </a>
+                        <a href="https://linkedin.com/in/piyush-sharma-32202b251/" target="_blank" class="px-6 py-3.5 rounded-xl glass-card text-slate-300 hover:text-white font-semibold text-sm flex items-center gap-2">
+                            <i class="fa-brands fa-linkedin text-lg text-brand-cyan"></i> LinkedIn
+                        </a>
+                    </div>
+
+                    <!-- Metrics / Highlights -->
+                    <div class="mt-16 pt-8 border-t border-slate-800/80 grid grid-cols-3 gap-6 w-full max-w-lg">
+                        <div>
+                            <span class="font-heading text-3xl font-extrabold text-white">80%</span>
+                            <p class="text-xs text-slate-400 mt-1 font-medium">B.E. CSE Score</p>
+                        </div>
+                        <div>
+                            <span class="font-heading text-3xl font-extrabold text-brand-cyan">3+</span>
+                            <p class="text-xs text-slate-400 mt-1 font-medium">Full Projects</p>
+                        </div>
+                        <div>
+                            <span class="font-heading text-3xl font-extrabold text-brand-violet">2026</span>
+                            <p class="text-xs text-slate-400 mt-1 font-medium">Graduate Year</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hero Interactive Graphic: Live IoT Water-Level Simulator Widget -->
+                <div class="lg:col-span-5 relative flex justify-center reveal">
+                    <div class="w-full max-w-md glass-card rounded-3xl p-6 border-brand-violet/30 animate-float">
+                        <div class="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
+                            <div class="flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full bg-brand-emerald animate-pulse"></span>
+                                <span class="text-xs font-mono font-bold text-white tracking-wide">IOT FLOOD MONITOR DEMO</span>
+                            </div>
+                            <span id="sensor-status" class="text-[10px] px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono font-bold">
+                                NORMAL
+                            </span>
+                        </div>
+
+                        <!-- Gauge & Slider Control -->
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between text-xs font-medium">
+                                <span class="text-slate-400">Simulated Sensor Level</span>
+                                <span id="water-val" class="font-mono font-bold text-brand-cyan">3.2 meters</span>
+                            </div>
+                            
+                            <input type="range" id="water-slider" min="1" max="10" step="0.1" value="3.2" class="w-full accent-brand-violet cursor-pointer h-2 bg-slate-900 rounded-lg">
+                            
+                            <div class="h-3 w-full bg-slate-950 rounded-full overflow-hidden p-0.5 border border-slate-800">
+                                <div id="water-bar" class="h-full bg-gradient-to-r from-brand-cyan via-brand-violet to-rose-500 rounded-full transition-all duration-200" style="width: 32%;"></div>
+                            </div>
+
+                            <!-- Live Telemetry Terminal Log -->
+                            <div class="bg-slate-950/90 p-3.5 rounded-xl font-mono text-[11px] text-slate-300 space-y-1.5 border border-slate-800/80">
+                                <div class="flex items-center justify-between text-[10px] text-slate-500 border-b border-slate-900 pb-1">
+                                    <span>TELEMETRY FEED</span>
+                                    <span>CLOUD SYNC: ACTIVE</span>
+                                </div>
+                                <p id="log-time" class="text-slate-400">&gt; Sensor ID #8024 listening...</p>
+                                <p id="log-alert" class="text-brand-emerald font-semibold">&gt; [200 OK] Water depth optimal.</p>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 pt-3 border-t border-slate-800/60 flex items-center justify-between text-[11px] text-slate-400">
+                            <span>Interactive Project Widget</span>
+                            <a href="#projects" class="text-brand-violet hover:underline font-semibold">View Hardware Specs &rarr;</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Recruiter Stack Matcher Feature -->
+        <section class="py-6 px-6 max-w-7xl mx-auto">
+            <div class="glass-card p-6 rounded-2xl border-brand-cyan/20">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h4 class="font-heading text-lg font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-sliders text-brand-cyan"></i> Recruiter Stack Matcher
+                        </h4>
+                        <p class="text-xs text-slate-400">Click any skill to highlight related project builds and capabilities on page.</p>
+                    </div>
+                    <div class="flex flex-wrap gap-2" id="stack-matcher-pills">
+                        <button class="matcher-pill px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs font-semibold text-slate-300 hover:border-brand-violet transition-all" data-tech="react">React</button>
+                        <button class="matcher-pill px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs font-semibold text-slate-300 hover:border-brand-violet transition-all" data-tech="javascript">JavaScript</button>
+                        <button class="matcher-pill px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs font-semibold text-slate-300 hover:border-brand-violet transition-all" data-tech="java">Java</button>
+                        <button class="matcher-pill px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs font-semibold text-slate-300 hover:border-brand-violet transition-all" data-tech="sql">SQL</button>
+                        <button class="matcher-pill px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs font-semibold text-slate-300 hover:border-brand-violet transition-all" data-tech="iot">IoT</button>
+                        <button id="reset-matcher" class="px-3 py-1.5 rounded-lg bg-brand-violet/20 border border-brand-violet/40 text-xs font-semibold text-brand-violet hover:bg-brand-violet hover:text-white transition-all hidden">Reset View</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Technical Skills Section -->
+        <section id="skills" class="py-20 px-6 max-w-7xl mx-auto">
+            <div class="flex flex-col items-start mb-16 reveal">
+                <span class="text-xs font-bold text-brand-violet tracking-widest uppercase mb-2">Technical Proficiency</span>
+                <h2 class="font-heading text-3xl sm:text-5xl font-extrabold text-white tracking-tight">Capabilities & Stack</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                
+                <!-- Frontend Engineering Card -->
+                <div class="glass-card p-8 rounded-3xl relative group reveal skill-card" data-tags="react,javascript,html,css,bootstrap">
+                    <div class="w-14 h-14 rounded-2xl bg-brand-violet/10 border border-brand-violet/30 text-brand-violet flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-code"></i>
+                    </div>
+                    <h3 class="font-heading text-2xl font-bold text-white mb-3">Frontend Technologies</h3>
+                    <p class="text-slate-400 text-sm mb-6 leading-relaxed">Designing clean, responsive user interfaces with modern web frameworks and UI libraries.</p>
+                    <div class="flex flex-wrap gap-2.5">
+                        <span class="px-3.5 py-1.5 rounded-lg bg-slate-900/80 border border-slate-800 text-slate-300 text-xs font-medium">React.js</span>
+                        <span class="px-3.5 py-1.5 rounded-lg bg-slate-900/80 border border-slate-800 text-slate-300 text-xs font-medium">JavaScript (ES6+)</span>
+                        <span class="px-3.5 py-1.5 rounded-lg bg-slate-900/80 border border-slate-800 text-slate-300 text-xs font-medium">HTML5 & CSS3</span>
+                        <span class="px-3.5 py-1.5 rounded-lg bg-slate-900/80 border border-slate-800 text-slate-300 text-xs font-medium">Bootstrap</span>
+                    </div>
+                </div>
+
+                <!-- Core Languages Card -->
+                <div class="glass-card p-8 rounded-3xl relative group reveal skill-card" data-tags="java,sql,dsa,oops">
+                    <div class="w-14 h-14 rounded-2xl bg-brand-cyan/10 border border-brand-cyan/30 text-brand-cyan flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-cubes"></i>
+                    </div>
+                    <h3 class="font-heading text-2xl font-bold text-white mb-3">Core Languages & SQL</h3>
+                    <p class="text-slate-400 text-sm mb-6 leading-relaxed">Object-oriented software development and relational database management.</p>
+                    <div class="flex flex-wrap gap-2.5">
+                        <span class="px-3.5 py-1.5 rounded-lg bg-slate-900/80 border border-slate-800 text-slate-300 text-xs font-medium">Java</span>
+                        <span class="px-3.5 py-1.5 rounded-lg bg-slate-900/80 border border-slate-800 text-slate-300 text-xs font-medium">SQL / Relational DBs</span>
+                        <span class="px-3.5 py-1.5 rounded-lg bg-slate-900/80 border border-slate-800 text-slate-300 text-xs font-medium">Data Structures</span>
+                        <span class="px-3.5 py-1.5 rounded-lg bg-slate-900/80 border border-slate-800 text-slate-300 text-xs font-medium">OOP Architecture</span>
+                    </div>
+                </div>
+
+                <!-- Hardware & Version Control Card -->
+                <div class="glass-card p-8 rounded-3xl relative group reveal skill-card" data-tags="iot,git,github,raspberry,api">
+                    <div class="w-14 h-14 rounded-2xl bg-brand-emerald/10 border border-brand-emerald/30 text-brand-emerald flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-microchip"></i>
+                    </div>
+                    <h3 class="font-heading text-2xl font-bold text-white mb-3">Hardware & Version Control</h3>
+                    <p class="text-slate-400 text-sm mb-6 leading-relaxed">Source control workflows, embedded sensor systems, and cloud data platform integrations.</p>
+                    <div class="flex flex-wrap gap-2.5">
+                        <span class="px-3.5 py-1.5 rounded-lg bg-slate-900/80 border border-slate-800 text-slate-300 text-xs font-medium">Git & GitHub</span>
+                        <span class="px-3.5 py-1.5 rounded-lg bg-slate-900/80 border border-slate-800 text-slate-300 text-xs font-medium">Raspberry Pi</span>
+                        <span class="px-3.5 py-1.5 rounded-lg bg-slate-900/80 border border-slate-800 text-slate-300 text-xs font-medium">IoT Sensors</span>
+                        <span class="px-3.5 py-1.5 rounded-lg bg-slate-900/80 border border-slate-800 text-slate-300 text-xs font-medium">RESTful APIs</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Featured Projects Section -->
+        <section id="projects" class="py-20 px-6 max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 reveal">
+                <div>
+                    <span class="text-xs font-bold text-brand-violet tracking-widest uppercase mb-2 block">Featured Work</span>
+                    <h2 class="font-heading text-3xl sm:text-5xl font-extrabold text-white tracking-tight">Software Projects</h2>
+                </div>
+
+                <!-- Category Filter Tabs -->
+                <div class="flex items-center gap-2 mt-6 md:mt-0 p-1.5 rounded-2xl glass-card">
+                    <button class="filter-btn active px-4 py-2 rounded-xl text-xs font-bold transition-all bg-brand-violet text-white" data-filter="all">All</button>
+                    <button class="filter-btn px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition-all" data-filter="web">Web Apps</button>
+                    <button class="filter-btn px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition-all" data-filter="iot">IoT System</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- Project 1: IoT Flood Monitoring -->
+                <div class="project-card glass-card rounded-3xl p-7 flex flex-col justify-between reveal" data-category="iot" data-tags="iot,javascript">
+                    <div>
+                        <div class="flex items-center justify-between text-xs font-bold mb-4">
+                            <span class="px-3 py-1 rounded-full bg-brand-emerald/10 border border-brand-emerald/30 text-brand-emerald">IoT & Cloud System</span>
+                            <span class="text-slate-400">Dec 2024 - Jan 2025</span>
+                        </div>
+                        <h3 class="font-heading text-2xl font-bold text-white mb-3">IoT Flood Monitoring System</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                            Developed an IoT hardware solution to monitor water levels in real-time using microcontrollers and sensors. Integrated cloud-based data storage and a web dashboard with automated SMS/email alerts.
+                        </p>
+                    </div>
+                    <div>
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span class="text-[11px] px-2.5 py-1 rounded-md bg-slate-900 text-slate-300 border border-slate-800">IoT Sensors</span>
+                            <span class="text-[11px] px-2.5 py-1 rounded-md bg-slate-900 text-slate-300 border border-slate-800">Cloud Storage</span>
+                            <span class="text-[11px] px-2.5 py-1 rounded-md bg-slate-900 text-slate-300 border border-slate-800">Web Dashboard</span>
+                        </div>
+                        <a href="https://github.com/Piyush20041024" target="_blank" class="w-full py-3 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white font-semibold text-xs border border-slate-800 flex items-center justify-center gap-2 transition-colors">
+                            <i class="fa-brands fa-github text-sm"></i> View Source Code
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Project 2: Job Finder Application -->
+                <div class="project-card glass-card rounded-3xl p-7 flex flex-col justify-between reveal" data-category="web" data-tags="react,javascript">
+                    <div>
+                        <div class="flex items-center justify-between text-xs font-bold mb-4">
+                            <span class="px-3 py-1 rounded-full bg-brand-cyan/10 border border-brand-cyan/30 text-brand-cyan">React Application</span>
+                            <span class="text-slate-400">Dec 2023 - Jan 2024</span>
+                        </div>
+                        <h3 class="font-heading text-2xl font-bold text-white mb-3">Job Finder Platform</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                            Built a React-based job search application enabling dynamic filtering by role and city location. Implemented custom CSS Grid card layouts with smooth transitions for enhanced UX.
+                        </p>
+                    </div>
+                    <div>
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span class="text-[11px] px-2.5 py-1 rounded-md bg-slate-900 text-slate-300 border border-slate-800">React.js</span>
+                            <span class="text-[11px] px-2.5 py-1 rounded-md bg-slate-900 text-slate-300 border border-slate-800">Dynamic Filtering</span>
+                            <span class="text-[11px] px-2.5 py-1 rounded-md bg-slate-900 text-slate-300 border border-slate-800">CSS Grid</span>
+                        </div>
+                        <a href="https://github.com/Piyush20041024" target="_blank" class="w-full py-3 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white font-semibold text-xs border border-slate-800 flex items-center justify-center gap-2 transition-colors">
+                            <i class="fa-brands fa-github text-sm"></i> View Source Code
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Project 3: Netflix Clone -->
+                <div class="project-card glass-card rounded-3xl p-7 flex flex-col justify-between reveal" data-category="web" data-tags="javascript">
+                    <div>
+                        <div class="flex items-center justify-between text-xs font-bold mb-4">
+                            <span class="px-3 py-1 rounded-full bg-brand-violet/10 border border-brand-violet/30 text-brand-violet">Web Application</span>
+                            <span class="text-slate-400">Dec 2022 - Jan 2023</span>
+                        </div>
+                        <h3 class="font-heading text-2xl font-bold text-white mb-3">Netflix Web Portal</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                            Replicated core streaming platform UI and media browsing. Integrated third-party REST APIs for real-time movie fetching, search, and dynamic responsive category layouts.
+                        </p>
+                    </div>
+                    <div>
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span class="text-[11px] px-2.5 py-1 rounded-md bg-slate-900 text-slate-300 border border-slate-800">JavaScript</span>
+                            <span class="text-[11px] px-2.5 py-1 rounded-md bg-slate-900 text-slate-300 border border-slate-800">REST API</span>
+                            <span class="text-[11px] px-2.5 py-1 rounded-md bg-slate-900 text-slate-300 border border-slate-800">HTML5/CSS3</span>
+                        </div>
+                        <a href="https://github.com/Piyush20041024" target="_blank" class="w-full py-3 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white font-semibold text-xs border border-slate-800 flex items-center justify-center gap-2 transition-colors">
+                            <i class="fa-brands fa-github text-sm"></i> View Source Code
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Education & Certifications Section -->
+        <section id="education" class="py-20 px-6 max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                
+                <!-- Timeline Section -->
+                <div class="lg:col-span-7 reveal">
+                    <span class="text-xs font-bold text-brand-violet tracking-widest uppercase mb-2 block">Academic Progression</span>
+                    <h2 class="font-heading text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-8">Education</h2>
+
+                    <div class="relative border-l-2 border-slate-800/80 ml-4 space-y-10 pl-8">
+                        
+                        <div class="relative group">
+                            <div class="absolute -left-[41px] top-1.5 w-4 h-4 rounded-full bg-obsidian border-2 border-brand-violet group-hover:scale-125 transition-transform"></div>
+                            <span class="text-xs font-bold text-brand-violet">June 2022 - June 2026</span>
+                            <h3 class="text-xl font-bold text-white mt-1">B.E. in Computer Engineering</h3>
+                            <p class="text-sm text-slate-400">Noida Institute of Engineering and Technology</p>
+                            <span class="inline-block mt-3 px-3 py-1 rounded-lg bg-slate-900 border border-slate-800 text-xs font-semibold text-brand-cyan">Aggregate Score: 80%</span>
+                        </div>
+
+                        <div class="relative group">
+                            <div class="absolute -left-[41px] top-1.5 w-4 h-4 rounded-full bg-obsidian border-2 border-slate-600 group-hover:scale-125 transition-transform"></div>
+                            <span class="text-xs font-bold text-slate-400">April 2021 - April 2022</span>
+                            <h3 class="text-lg font-bold text-white mt-1">Senior Secondary (Class XII)</h3>
+                            <p class="text-sm text-slate-400">Brilliant Public School</p>
+                            <span class="inline-block mt-3 px-3 py-1 rounded-lg bg-slate-900 border border-slate-800 text-xs font-semibold text-slate-300">Score: 81%</span>
+                        </div>
+
+                        <div class="relative group">
+                            <div class="absolute -left-[41px] top-1.5 w-4 h-4 rounded-full bg-obsidian border-2 border-slate-600 group-hover:scale-125 transition-transform"></div>
+                            <span class="text-xs font-bold text-slate-400">April 2019 - April 2020</span>
+                            <h3 class="text-lg font-bold text-white mt-1">Secondary (Class X)</h3>
+                            <p class="text-sm text-slate-400">Brilliant Public School</p>
+                            <span class="inline-block mt-3 px-3 py-1 rounded-lg bg-slate-900 border border-slate-800 text-xs font-semibold text-slate-300">Score: 80%</span>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Certifications & Interests Sidebar -->
+                <div class="lg:col-span-5 space-y-8 reveal">
+                    <div>
+                        <span class="text-xs font-bold text-brand-cyan tracking-widest uppercase mb-2 block">Recognitions</span>
+                        <h2 class="font-heading text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-8">Certifications</h2>
+
+                        <div class="space-y-4">
+                            <div class="glass-card p-5 rounded-2xl flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center text-xl shrink-0">
+                                    <i class="fa-solid fa-trophy"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-white text-base">Kharagpur Data Science Hackathon</h4>
+                                    <p class="text-xs text-slate-400 mt-0.5">Competitive Technical Problem Solving</p>
+                                </div>
+                            </div>
+
+                            <div class="glass-card p-5 rounded-2xl flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-xl bg-brand-emerald/10 border border-brand-emerald/30 text-brand-emerald flex items-center justify-center text-xl shrink-0">
+                                    <i class="fa-solid fa-microchip"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-white text-base">IoT Raspberry Pi with Projects</h4>
+                                    <p class="text-xs text-slate-400 mt-0.5">Embedded Hardware Architecture & Sensors</p>
+                                </div>
+                            </div>
+
+                            <div class="glass-card p-5 rounded-2xl flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-xl bg-brand-violet/10 border border-brand-violet/30 text-brand-violet flex items-center justify-center text-xl shrink-0">
+                                    <i class="fa-brands fa-java"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-white text-base">Java Programming Fundamentals</h4>
+                                    <p class="text-xs text-slate-400 mt-0.5">Object-Oriented Programming & Data Handling</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Personal Hobbies -->
+                    <div>
+                        <h3 class="font-heading text-xl font-bold text-white mb-4">Interests & Hobbies</h3>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="glass-card p-3.5 rounded-xl flex items-center gap-3 text-xs font-semibold text-slate-300">
+                                <i class="fa-solid fa-baseball-bat-ball text-brand-violet"></i> Playing Cricket
+                            </div>
+                            <div class="glass-card p-3.5 rounded-xl flex items-center gap-3 text-xs font-semibold text-slate-300">
+                                <i class="fa-solid fa-gamepad text-brand-cyan"></i> Esports (BGMI)
+                            </div>
+                            <div class="glass-card p-3.5 rounded-xl flex items-center gap-3 text-xs font-semibold text-slate-300">
+                                <i class="fa-solid fa-newspaper text-brand-emerald"></i> Reading Tech Blogs
+                            </div>
+                            <div class="glass-card p-3.5 rounded-xl flex items-center gap-3 text-xs font-semibold text-slate-300">
+                                <i class="fa-solid fa-puzzle-piece text-amber-400"></i> Logic Puzzles
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Interactive Contact Section -->
+        <section id="contact" class="py-20 px-6 max-w-7xl mx-auto">
+            <div class="glass-card rounded-3xl p-8 sm:p-14 relative overflow-hidden border-brand-violet/30 reveal">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                    
+                    <div class="lg:col-span-6">
+                        <span class="text-xs font-bold text-brand-violet tracking-widest uppercase mb-2 block">Let's Connect</span>
+                        <h2 class="font-heading text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight">
+                            Ready to Build Exceptional Software Together?
+                        </h2>
+                        <p class="text-slate-400 text-sm sm:text-base mt-4 leading-relaxed">
+                            I am open to software engineering, frontend development, and web application roles. Feel free to reach out directly via email or social channels.
+                        </p>
+
+                        <div class="mt-8 space-y-4">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-brand-violet">
+                                    <i class="fa-solid fa-envelope"></i>
+                                </div>
+                                <span class="text-sm font-semibold text-slate-200">piyush24102004@gmail.com</span>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-brand-cyan">
+                                    <i class="fa-solid fa-phone"></i>
+                                </div>
+                                <span class="text-sm font-semibold text-slate-200">+91-9084908498</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Form -->
+                    <div class="lg:col-span-6 bg-slate-950/60 p-6 sm:p-8 rounded-2xl border border-slate-800/80">
+                        <form id="contact-form" class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-400 mb-1">Your Name</label>
+                                <input type="text" required placeholder="John Doe" class="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-800 text-sm text-white focus:outline-none focus:border-brand-violet transition-colors">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-400 mb-1">Your Email</label>
+                                <input type="email" required placeholder="john@example.com" class="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-800 text-sm text-white focus:outline-none focus:border-brand-violet transition-colors">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-400 mb-1">Message</label>
+                                <textarea rows="3" required placeholder="Hello Piyush, I'd like to discuss an opportunity..." class="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-800 text-sm text-white focus:outline-none focus:border-brand-violet transition-colors resize-none"></textarea>
+                            </div>
+                            <button type="submit" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-brand-violet to-brand-indigo text-white font-bold text-sm btn-glow-violet transition-all">
+                                Send Message
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800/80 py-12 px-6 glass-nav relative z-10">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-brand-violet/20 border border-brand-violet/40 text-brand-violet font-bold text-lg flex items-center justify-center">
+                    PS
+                </div>
+                <div>
+                    <h4 class="font-bold text-white text-base">Piyush Sharma</h4>
+                    <p class="text-xs text-slate-400">Web Developer & Software Engineer</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-5">
+                <a href="https://github.com/Piyush20041024" target="_blank" class="w-10 h-10 rounded-xl glass-card flex items-center justify-center text-slate-400 hover:text-white hover:border-brand-violet transition-colors">
+                    <i class="fa-brands fa-github text-lg"></i>
+                </a>
+                <a href="https://linkedin.com/in/piyush-sharma-32202b251/" target="_blank" class="w-10 h-10 rounded-xl glass-card flex items-center justify-center text-slate-400 hover:text-white hover:border-brand-violet transition-colors">
+                    <i class="fa-brands fa-linkedin text-lg"></i>
+                </a>
+                <a href="mailto:piyush24102004@gmail.com" class="w-10 h-10 rounded-xl glass-card flex items-center justify-center text-slate-400 hover:text-white hover:border-brand-violet transition-colors">
+                    <i class="fa-solid fa-envelope text-lg"></i>
+                </a>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto mt-8 pt-6 border-t border-slate-800/60 text-center text-xs text-slate-500">
+            © 2026 Piyush Sharma. Built with Tailwind CSS, HTML5 & JavaScript.
+        </div>
+    </footer>
+
+    <!-- Floating CLI Trigger Button -->
+    <button id="floating-cli-btn" class="fixed bottom-6 left-6 z-40 w-12 h-12 rounded-full bg-slate-900 border border-brand-cyan/40 text-brand-cyan shadow-xl hover:scale-110 hover:border-brand-cyan transition-all flex items-center justify-center">
+        <i class="fa-solid fa-terminal text-lg"></i>
+    </button>
+
+    <!-- Command-Line Terminal Modal (Ctrl + K) -->
+    <div id="cli-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="w-full max-w-2xl bg-slate-950 border border-brand-violet/40 rounded-2xl shadow-2xl overflow-hidden font-mono text-xs sm:text-sm">
+            
+            <!-- Terminal Titlebar -->
+            <div class="bg-slate-900/90 px-4 py-3 border-b border-slate-800 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="w-3 h-3 rounded-full bg-rose-500/80 inline-block cursor-pointer" id="close-cli-dot"></span>
+                    <span class="w-3 h-3 rounded-full bg-amber-500/80 inline-block"></span>
+                    <span class="w-3 h-3 rounded-full bg-emerald-500/80 inline-block"></span>
+                    <span class="text-slate-400 text-xs ml-2 font-mono">piyush-shell v1.0.4</span>
+                </div>
+                <span class="text-[11px] text-slate-500">Press ESC to close</span>
+            </div>
+
+            <!-- Terminal Screen Body -->
+            <div id="cli-output" class="p-4 h-80 overflow-y-auto space-y-2 text-slate-300 leading-relaxed">
+                <p class="text-brand-violet font-bold">&gt; Welcome to Piyush Sharma's Developer Terminal!</p>
+                <p class="text-slate-400">&gt; Type <span class="text-brand-cyan font-bold">help</span> to view available system commands.</p>
+            </div>
+
+            <!-- Terminal Input Line -->
+            <div class="p-3 bg-slate-900/50 border-t border-slate-800 flex items-center gap-2">
+                <span class="text-brand-cyan font-bold pl-1">&gt;</span>
+                <input type="text" id="cli-input" placeholder="Type a command (e.g. help, skills, hire)..." class="w-full bg-transparent text-white focus:outline-none font-mono text-xs sm:text-sm">
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Banner -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 glass-card bg-slate-900/95 border-brand-violet text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3">
+        <i class="fa-solid fa-circle-check text-brand-emerald text-xl"></i>
+        <div>
+            <h5 class="font-bold text-xs">Message Received!</h5>
+            <p class="text-xs text-slate-400">Thank you for reaching out. I'll get back to you shortly.</p>
+        </div>
+    </div>
+
+    <!-- Pure Embedded JavaScript Logic -->
+    <script>
+        // 1. Scroll Progress Bar Tracking
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('scroll-progress').style.width = scrolled + '%';
+        });
+
+        // 2. Mobile Drawer Navigation Toggle
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // 3. Animated Typewriter Headline Effect
+        const phrases = [
+            "Smart Web Platforms",
+            "Responsive Interfaces",
+            "IoT Hardware Dashboards",
+            "Scalable REST Backends"
+        ];
+        let phraseIdx = 0;
+        let charIdx = 0;
+        let isDeleting = false;
+        const typewriterEl = document.getElementById('typewriter-text');
+
+        function typeLoop() {
+            const currentPhrase = phrases[phraseIdx];
+            if (isDeleting) {
+                typewriterEl.innerText = currentPhrase.substring(0, charIdx - 1);
+                charIdx--;
+            } else {
+                typewriterEl.innerText = currentPhrase.substring(0, charIdx + 1);
+                charIdx++;
+            }
+
+            let typeSpeed = isDeleting ? 40 : 80;
+
+            if (!isDeleting && charIdx === currentPhrase.length) {
+                typeSpeed = 2000;
+                isDeleting = true;
+            } else if (isDeleting && charIdx === 0) {
+                isDeleting = false;
+                phraseIdx = (phraseIdx + 1) % phrases.length;
+                typeSpeed = 500;
+            }
+
+            setTimeout(typeLoop, typeSpeed);
+        }
+        document.addEventListener('DOMContentLoaded', typeLoop);
+
+        // 4. Interactive IoT Simulator Logic
+        const slider = document.getElementById('water-slider');
+        const valText = document.getElementById('water-val');
+        const bar = document.getElementById('water-bar');
+        const status = document.getElementById('sensor-status');
+        const logAlert = document.getElementById('log-alert');
+
+        slider.addEventListener('input', (e) => {
+            const val = parseFloat(e.target.value);
+            valText.innerText = `${val.toFixed(1)} meters`;
+            bar.style.width = `${val * 10}%`;
+
+            if (val >= 7.5) {
+                status.innerText = 'CRITICAL FLOOD WARNING';
+                status.className = 'text-[10px] px-2.5 py-0.5 rounded-full bg-rose-500/20 border border-rose-500/40 text-rose-400 font-mono font-bold animate-pulse';
+                logAlert.innerText = '> [ALERT 500] Flood threshold exceeded! Alert dispatched.';
+                logAlert.className = 'text-rose-400 font-bold';
+            } else if (val >= 5.0) {
+                status.innerText = 'ELEVATED RISK';
+                status.className = 'text-[10px] px-2.5 py-0.5 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-400 font-mono font-bold';
+                logAlert.innerText = '> [WARN 300] High water level detected in reservoir.';
+                logAlert.className = 'text-amber-400';
+            } else {
+                status.innerText = 'NORMAL';
+                status.className = 'text-[10px] px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono font-bold';
+                logAlert.innerText = '> [200 OK] Water depth optimal.';
+                logAlert.className = 'text-brand-emerald font-semibold';
+            }
+        });
+
+        // 5. Mouse-Tracking Spotlight Effect on Glass Cards
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.background = `radial-gradient(350px circle at ${x}px ${y}px, rgba(139, 92, 246, 0.15), rgba(15, 20, 32, 0.55))`;
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.background = 'rgba(15, 20, 32, 0.55)';
+            });
+        });
+
+        // 6. Recruiter Tech Stack Matcher Filter
+        const matcherPills = document.querySelectorAll('.matcher-pill');
+        const resetBtn = document.getElementById('reset-matcher');
+        const allCards = document.querySelectorAll('.project-card, .skill-card');
+
+        matcherPills.forEach(pill => {
+            pill.addEventListener('click', () => {
+                const tech = pill.getAttribute('data-tech');
+                matcherPills.forEach(p => p.classList.remove('bg-brand-violet', 'text-white', 'border-brand-violet'));
+                pill.classList.add('bg-brand-violet', 'text-white', 'border-brand-violet');
+                resetBtn.classList.remove('hidden');
+
+                allCards.forEach(card => {
+                    const tags = card.getAttribute('data-tags') || '';
+                    if (tags.includes(tech)) {
+                        card.classList.add('card-matched');
+                        card.classList.remove('card-dimmed');
+                    } else {
+                        card.classList.remove('card-matched');
+                        card.classList.add('card-dimmed');
+                    }
+                });
+            });
+        });
+
+        resetBtn.addEventListener('click', () => {
+            matcherPills.forEach(p => p.classList.remove('bg-brand-violet', 'text-white', 'border-brand-violet'));
+            allCards.forEach(card => card.classList.remove('card-matched', 'card-dimmed'));
+            resetBtn.classList.add('hidden');
+        });
+
+        // 7. Project Category Filter Tabs
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const projectCards = document.querySelectorAll('.project-card');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => {
+                    b.classList.remove('active', 'bg-brand-violet', 'text-white');
+                    b.classList.add('text-slate-400');
+                });
+                btn.classList.add('active', 'bg-brand-violet', 'text-white');
+                btn.classList.remove('text-slate-400');
+
+                const filterValue = btn.getAttribute('data-filter');
+
+                projectCards.forEach(card => {
+                    if (filterValue === 'all' || card.getAttribute('data-category') === filterValue) {
+                        card.style.display = 'flex';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // 8. Scroll Reveal Observer
+        const revealElements = document.querySelectorAll('.reveal');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        revealElements.forEach(el => revealObserver.observe(el));
+
+        // 9. Contact Form Submission & Toast Alert
+        const contactForm = document.getElementById('contact-form');
+        const toast = document.getElementById('toast');
+
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            toast.classList.add('show');
+            contactForm.reset();
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 4000);
+        });
+
+        // 10. CLI Terminal Modal Logic (Ctrl + K)
+        const cliModal = document.getElementById('cli-modal');
+        const cliInput = document.getElementById('cli-input');
+        const cliOutput = document.getElementById('cli-output');
+        const openCliNav = document.getElementById('open-cli-nav');
+        const openCliMobile = document.getElementById('open-cli-mobile');
+        const floatingCliBtn = document.getElementById('floating-cli-btn');
+        const closeCliDot = document.getElementById('close-cli-dot');
+
+        function toggleCli() {
+            cliModal.classList.toggle('hidden');
+            if (!cliModal.classList.contains('hidden')) {
+                cliInput.focus();
+            }
+        }
+
+        openCliNav.addEventListener('click', toggleCli);
+        if (openCliMobile) openCliMobile.addEventListener('click', toggleCli);
+        floatingCliBtn.addEventListener('click', toggleCli);
+        closeCliDot.addEventListener('click', toggleCli);
+
+        window.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+                e.preventDefault();
+                toggleCli();
+            } else if (e.key === 'Escape' && !cliModal.classList.contains('hidden')) {
+                cliModal.classList.add('hidden');
+            }
+        });
+
+        cliInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const cmd = cliInput.value.trim().toLowerCase();
+                cliInput.value = '';
+                
+                const cmdLine = document.createElement('p');
+                cmdLine.className = 'text-white font-bold';
+                cmdLine.innerText = `> ${cmd}`;
+                cliOutput.appendChild(cmdLine);
+
+                const response = document.createElement('p');
+                response.className = 'text-slate-300';
+
+                switch(cmd) {
+                    case 'help':
+                        response.innerHTML = `Available commands:<br>
+                        - <span class="text-brand-cyan">skills</span>: Print technical stack<br>
+                        - <span class="text-brand-cyan">projects</span>: List software builds<br>
+                        - <span class="text-brand-cyan">contact</span>: Show phone & email details<br>
+                        - <span class="text-brand-cyan">sudo hire piyush</span>: Trigger secret recruiter mode<br>
+                        - <span class="text-brand-cyan">clear</span>: Clear terminal screen`;
+                        break;
+                    case 'skills':
+                        response.innerText = 'Languages: Java, JavaScript, SQL. Frontend: React.js, HTML5, CSS3, Bootstrap. Hardware: IoT, Raspberry Pi, Sensors.';
+                        break;
+                    case 'projects':
+                        response.innerText = '1. IoT Flood Monitoring System | 2. Job Finder Platform | 3. Netflix Web Portal';
+                        break;
+                    case 'contact':
+                        response.innerText = 'Email: piyush24102004@gmail.com | Phone: +91-9084908498 | GitHub: Piyush20041024';
+                        break;
+                    case 'sudo hire piyush':
+                        response.className = 'text-brand-emerald font-bold';
+                        response.innerText = '🎉 ACCESS GRANTED: Offer Letter dispatched! Triggering celebration...';
+                        if (typeof confetti === 'function') {
+                            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+                        }
+                        break;
+                    case 'clear':
+                        cliOutput.innerHTML = '';
+                        return;
+                    default:
+                        response.className = 'text-rose-400';
+                        response.innerText = `Command not recognized: '${cmd}'. Type 'help' for available commands.`;
+                }
+
+                cliOutput.appendChild(response);
+                cliOutput.scrollTop = cliOutput.scrollHeight;
+            }
+        });
+    </script>
+</body>
+</html>
